@@ -31,7 +31,7 @@ def get_Y_matrix():
     YB=[]
 
 
-    f=open("E:\\coding\\python\\林惠孚1151600307\\in.txt","r")
+    f=open("E:\\1151600307\\in.txt","r")
     line=''.join(f.readline()).rstrip("\n").split(",")
     nBus=int(line[0])
     nL=int(line[1])
@@ -104,7 +104,7 @@ def get_Y_matrix():
             pass
 
     #check Y matrix
-    f=open("E:\\coding\\python\\林惠孚1151600307\\GGBB.txt","w")
+    f=open("E:\\1151600307\\GGBB.txt","w")
     f.write("---Y Matrix---\n")
     for i in range(nBus):
         for j in range(nBus):
