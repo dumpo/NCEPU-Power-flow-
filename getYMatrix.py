@@ -1,3 +1,5 @@
+import gobal_variables as gb
+
 class Line(object):
     def __init__(self,Num=0,NumI=0,NumJ=0,R=0,X=0,B=0,K=0):
         self.Num=Num
@@ -18,27 +20,25 @@ class Bus(object):
         self.LoadP=LoadP
         self.LoadQ=LoadQ
         self.Type=Type
-
+# NBUS=5
+# NLINE=7
+# #global variables
+# X=[]
+# def_self=[]
+# gb.sBus=[]
+# gb.sLine=[]
+# gb.YG=[]
+# gb.YB=[]
 def get_Y_matrix():
-    # NBUS=5
-    # NLINE=7
-    # #global variables
-    # X=[]
-    # def_self=[]
-    sBus=[]
-    sLine=[]
-    YG=[]
-    YB=[]
 
-
-    f=open("E:\\1151600307\\in.txt","r")
+    f=open("E:\\coding\\python\\林惠孚1151600307\\in.txt","r")
     line=''.join(f.readline()).rstrip("\n").split(",")
-    nBus=int(line[0])
-    nL=int(line[1])
-    nSH=int(line[2])
+    gb.nBus=int(line[0])
+    gb.nL=int(line[1])
+    gb.nSH=int(line[2])
     f.close
 
-    for i in range(nBus):
+    for i in range(gb.nBus):
         line="".join(f.readline()).rstrip("\n").split(",")
         # print(line)
         i1=int(line[0])
@@ -49,10 +49,10 @@ def get_Y_matrix():
         d5=float(line[5])
         d6=float(line[6])
         i2=int(line[7])
-        sBus.append(Bus(i1,d1,d2,d3,d4,d5,d6,i2))
+        gb.sBus.append(Bus(i1,d1,d2,d3,d4,d5,d6,i2))
         
 
-    for i in range(nL):
+    for i in range(gb.nL):
         line="".join(f.readline()).split()
         line=' '.join(line).split(" ")
         i1=int(line[0])
@@ -62,52 +62,52 @@ def get_Y_matrix():
         d2=float(line[4])
         d3=float(line[5])
         d4=float(line[6])
-        sLine.append(Line(i1,i2,i3,d1,d2,d3,d4))
+        gb.sLine.append(Line(i1,i2,i3,d1,d2,d3,d4))
 
     print(line)
 
-    for i in range(nSH):
+    for i in range(gb.nSH):
         line="".join(f.readline())
         print(line)
         pass
 
     #make Y Matrix
-    for i in range(nBus):
+    for i in range(gb.nBus):
         temp=[]
-        for j in range(nBus):
+        for j in range(gb.nBus):
             temp.append(0)
             # print(temp)
-        YB.append(temp.copy())
-        YG.append(temp.copy())
+        gb.YB.append(temp.copy())
+        gb.YG.append(temp.copy())
 
-    for l in range(nL):
-        i=sLine[l].NumI-1
-        j=sLine[l].NumJ-1
-        r=sLine[l].R
-        x=sLine[l].X
+    for l in range(gb.nL):
+        i=gb.sLine[l].NumI-1
+        j=gb.sLine[l].NumJ-1
+        r=gb.sLine[l].R
+        x=gb.sLine[l].X
         d1=r*r+x*x
         g=r/d1
         b=-1*x/d1
-        m=sLine[1].K
+        m=gb.sLine[1].K
     #普通支路
-        if(abs(sLine[l].K-1)<0.00001):
-            YG[i][i]=YG[i][i]+g
-            YG[j][j]=YG[j][j]+g
-            YB[i][i]=YB[i][i]+b+sLine[l].B
-            YB[j][j]=YB[j][j]+b+sLine[l].B
-            YG[i][j]=YG[i][j]-g
-            YG[j][i]=YG[j][i]-g
-            YB[i][j]=YB[i][j]-b
-            YB[j][i]=YB[j][i]-b
+        if(abs(gb.sLine[l].K-1)<0.00001):
+            gb.YG[i][i]=gb.YG[i][i]+g
+            gb.YG[j][j]=gb.YG[j][j]+g
+            gb.YB[i][i]=gb.YB[i][i]+b+gb.sLine[l].B
+            gb.YB[j][j]=gb.YB[j][j]+b+gb.sLine[l].B
+            gb.YG[i][j]=gb.YG[i][j]-g
+            gb.YG[j][i]=gb.YG[j][i]-g
+            gb.YB[i][j]=gb.YB[i][j]-b
+            gb.YB[j][i]=gb.YB[j][i]-b
         else:
             #TODO 变压器支路
             pass
 
     #check Y matrix
-    f=open("E:\\1151600307\\GGBB.txt","w")
+    f=open("E:\\coding\\python\\林惠孚1151600307\\GGBB.txt","w")
     f.write("---Y Matrix---\n")
-    for i in range(nBus):
-        for j in range(nBus):
-            if(abs(YB[i][j])>0.00001):
-                f.write("Y(%3d,%-3d)=(%10.5f,%10.5f)\n"%(i+1,j+1,YG[i][j],YB[i][j]))
+    for i in range(gb.nBus):
+        for j in range(gb.nBus):
+            if(abs(gb.YB[i][j])>0.00001):
+                f.write("Y(%3d,%-3d)=(%10.5f,%10.5f)\n"%(i+1,j+1,gb.YG[i][j],gb.YB[i][j]))
     f.close()
