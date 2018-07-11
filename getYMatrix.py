@@ -111,3 +111,6 @@ def get_Y_matrix():
             if(abs(gb.YB[i][j])>0.00001):
                 f.write("Y(%3d,%-3d)=(%10.5f,%10.5f)\n"%(i+1,j+1,gb.YG[i][j],gb.YB[i][j]))
     f.close()
+	
+if __name=="__main__":
+	pass

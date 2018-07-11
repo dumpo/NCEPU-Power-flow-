@@ -19,7 +19,8 @@ def caculate_unbalance(caculate_type):
 		result_list=[]
 		result=0
 			if sBus[i].Type==2:
-				result=0
+				#result=0
+				pass
 			else:
 				if caculate_type=='P':
 					for j in range(n):
@@ -37,6 +38,23 @@ def caculate_unbalance(caculate_type):
 						result=result-sBus[i].LoadQ
 				if caculate_type=='U':
 					result=sBus[i].Volt * sBus[i].Volt - (sBus[i].e * sBus[i].e + sBus[i].f * sBus[i].f)
-		result_list.append(result)
+			result_list.append(result)
 	return result_list
+def get_unbalance():
+	dP_list=caculate_unbalance('P')
+	dQ_list=caculate_unbalance('Q')
+	dU_list=caculate_unbalance('U')
+	return dP_list+dP_list+dP_list
 	
+def get_num_of_bus_type():
+	for i in range(gb.nBus):
+		if sBus[i].Type==0:
+			gb.num_PQ=gb.num_PQ+1
+			#gb.PQ_list.append(sBus[i].Num)
+
+		if sBus[i].Type==1:
+			gb.num_PV=gb.num_PV+1
+			#gb.PV_list.append(sBus[i].Num)
+
+if __name=="__main__":
+	pass
