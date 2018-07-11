@@ -1,23 +1,27 @@
 import numpy as np
-import gobal_variables as gb
+import global_variables as gb
 from getYMatrix import get_Y_matrix
-from get_unbalance import get_unbalance
+from getUnbalance import get_unbalance
 from getYakebi import get_yakebi
 
-def update_ef(e,f):
-	for i in range(1,gb,nBus-1):
-		
+def update_ef(delta_e,delta_f):
+    for i in range(1,gb.nBus):
+        gb.sBus[i].e=delta_e[i-1]
+        gb.sBus[i].f=delta_f[i-1]
+
 
 def solve():
-	get_Y_matrix()
-	get_num_of_bus_type()
-	
-	while True:
-		YAKEBI=np.mat(get_yakebi())#.求逆
-		unbalabce=np.mat(get_unbalance())#.翻转
-		delta=YAKEBI*unbalabce
-		
-		if max(delta[0:gb.nBus-1])<=0.00001 and max(delta[gb.nBus-1:2*gb.nBus-2])<=0.00001 :
-			break
-if __name=="__main__":
-	solve()
+    get_Y_matrix()
+    while True:
+        unbalabce=np.mat(get_unbalance()).T #??
+        print(unbalabce)
+        YAKEBI=np.mat(get_yakebi()).I #???
+        print(YAKEBI)
+        delta=YAKEBI*unbalabce 
+        print(delta)
+        update_ef(delta[0:gb.nBus-1],delta[gb.nBus-1:2*gb.nBus-2])
+        if max(delta[0:gb.nBus-1])<=0.00001 and max(delta[gb.nBus-1:2*gb.nBus-2])<=0.00001 :
+            break
+    
+if __name__=="__main__":
+    solve()

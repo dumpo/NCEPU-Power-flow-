@@ -1,4 +1,4 @@
-import gobal_variables as gb
+import global_variables as gb
 
 class Line(object):
     def __init__(self,Num=0,NumI=0,NumJ=0,R=0,X=0,B=0,K=0):
@@ -20,23 +20,18 @@ class Bus(object):
         self.LoadP=LoadP
         self.LoadQ=LoadQ
         self.Type=Type
-# NBUS=5
-# NLINE=7
-# #global variables
-# X=[]
-# def_self=[]
-# gb.sBus=[]
-# gb.sLine=[]
-# gb.YG=[]
-# gb.YB=[]
+
 def get_Y_matrix():
 
-    f=open("E:\\coding\\python\\林惠孚1151600307\\in.txt","r")
+    f=open("E:\\coding\\潮流上机\\in.txt","r")
     line=''.join(f.readline()).rstrip("\n").split(",")
     gb.nBus=int(line[0])
     gb.nL=int(line[1])
     gb.nSH=int(line[2])
     f.close
+    
+    gb.P=[0 for i in range(gb.nBus-1)]
+    gb.Q=[0 for i in range(gb.nBus-1)]
 
     for i in range(gb.nBus):
         line="".join(f.readline()).rstrip("\n").split(",")
@@ -64,11 +59,11 @@ def get_Y_matrix():
         d4=float(line[6])
         gb.sLine.append(Line(i1,i2,i3,d1,d2,d3,d4))
 
-    print(line)
+    # print(line)
 
     for i in range(gb.nSH):
         line="".join(f.readline())
-        print(line)
+        # print(line)
         pass
 
     #make Y Matrix
@@ -104,7 +99,7 @@ def get_Y_matrix():
             pass
 
     #check Y matrix
-    f=open("E:\\coding\\python\\林惠孚1151600307\\GGBB.txt","w")
+    f=open("E:\\coding\\潮流上机\\GGBB.txt","w")
     f.write("---Y Matrix---\n")
     for i in range(gb.nBus):
         for j in range(gb.nBus):
@@ -112,5 +107,5 @@ def get_Y_matrix():
                 f.write("Y(%3d,%-3d)=(%10.5f,%10.5f)\n"%(i+1,j+1,gb.YG[i][j],gb.YB[i][j]))
     f.close()
 	
-if __name=="__main__":
+if __name__=="__main__":
 	pass
