@@ -29,10 +29,6 @@ def get_Y_matrix():
     gb.nL=int(line[1])
     gb.nSH=int(line[2])
     f.close
-    
-    gb.P=[0 for i in range(gb.nBus-1)]
-    gb.Q=[0 for i in range(gb.nBus-1)]
-
     for i in range(gb.nBus):
         line="".join(f.readline()).rstrip("\n").split(",")
         # print(line)
