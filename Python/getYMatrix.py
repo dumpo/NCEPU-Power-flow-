@@ -23,7 +23,7 @@ class Bus(object):
 
 def get_Y_matrix():
 
-    f=open("E:\\coding\\潮流上机\\in.txt","r")
+    f=open("E:\\coding\\潮流上机\\Python\\in.txt","r")
     line=''.join(f.readline()).rstrip("\n").split(",")
     gb.nBus=int(line[0])
     gb.nL=int(line[1])
@@ -116,7 +116,7 @@ def get_Y_matrix():
             # gb.YB[j][i]=gb.YB[j][i]-b1
 
     #check Y matrix
-    f=open("E:\\coding\\潮流上机\\GGBB.txt","w")
+    f=open("E:\\coding\\潮流上机\\python\\GGBB.txt","w")
     f.write("---Y Matrix---\n")
     for i in range(gb.nBus):
         for j in range(gb.nBus):

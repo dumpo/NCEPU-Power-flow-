@@ -9,9 +9,9 @@ def coordinate_tranform(Volt,Phase):
     
 def set_bus_init_value():
     for i in range(gb.nBus):
-        if gb.sBus[i].Type==1 or gb.sBus[i].Type==2:
+        if gb.sBus[i].Type==2:
             gb.sBus[i].e,gb.sBus[i].f=coordinate_tranform(gb.sBus[i].Volt,gb.sBus[i].Phase)
-        if gb.sBus[i].Type==0:
+        else:
             gb.sBus[i].e=1
             gb.sBus[i].f=0
         
@@ -73,6 +73,7 @@ def caculate_unbalance():
     temp=[]
     gb.P=[0 for i in range(gb.nBus-1)]
     gb.Q=[0 for i in range(gb.nBus-1)]
+    result=0
     for i in range(1,gb.nBus):
         for j in range(gb.nBus):
             gb.P[i-1]=gb.P[i-1]+(gb.sBus[i].e*(gb.YG[i][j]*gb.sBus[j].e-gb.YB[i][j]*gb.sBus[j].f)+gb.sBus[i].f*(gb.YG[i][j]*gb.sBus[j].f+gb.YB[i][j]*gb.sBus[j].e))
@@ -80,10 +81,13 @@ def caculate_unbalance():
         # dP_list.append(result)
         temp.append(result)
         
+        result=0
         if(gb.sBus[i].Type==0):
             for j in range(gb.nBus):
-                gb.Q[i-1]=gb.Q[i-1]+(gb.sBus[i].f*(gb.YG[i][j]*gb.sBus[j].e-gb.YB[i][j]*gb.sBus[j].f)-gb.sBus[i].e*(gb.YG[i][j]*gb.sBus[j].f+gb.YB[i][j]*gb.sBus[j].e))
-            result=gb.sBus[i].GenQ-gb.sBus[i].LoadQ-gb.Q[i-1]
+                gb.Q[i-1]=gb.Q[i-1]- ((gb.sBus[i].f*(gb.YG[i][j]*gb.sBus[j].e-gb.YB[i][j]*gb.sBus[j].f)) + (gb.sBus[i].e*(gb.YG[i][j]*gb.sBus[j].f+gb.YB[i][j]*gb.sBus[j].e)))
+            # print(gb.Q[i-1])
+            # result=(gb.sBus[i].GenQ+gb.sBus[i].LoadQ)+gb.Q[i-1]
+            result=gb.Q[i-1]
             temp.append(result)
             # dQ_list.append(result)
         
@@ -136,4 +140,4 @@ if __name__=="__main__":
     # gb.sBus[8].f=0.0
     print(caculate_unbalance())
 
-    # print(len(caculate_unbalance()))
+    print(len(caculate_unbalance()))
