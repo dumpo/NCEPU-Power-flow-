@@ -45,7 +45,7 @@ def get_Y_matrix():
 
     for i in range(gb.nL):
         line="".join(f.readline()).split()
-        line=' '.join(line).split(" ")
+        line=' '.join(line).split(",")
         i1=int(line[0])
         i2=int(line[1])
         i3=int(line[2])
@@ -79,9 +79,9 @@ def get_Y_matrix():
         d1=r*r+x*x
         g=r/d1
         b=-1*x/d1
-        m=gb.sLine[1].K
+        m=gb.sLine[l].K
     #普通支路
-        if(abs(gb.sLine[l].K-1)<0.00001):
+        if(gb.sLine[l].K==0):
             gb.YG[i][i]=gb.YG[i][i]+g
             gb.YG[j][j]=gb.YG[j][j]+g
             gb.YB[i][i]=gb.YB[i][i]+b+gb.sLine[l].B
@@ -91,8 +91,29 @@ def get_Y_matrix():
             gb.YB[i][j]=gb.YB[i][j]-b
             gb.YB[j][i]=gb.YB[j][i]-b
         else:
-            #TODO 变压器支路
-            pass
+            gb.YG[i][i]=gb.YG[i][i]+g/m+g*(m-1)/m
+            gb.YG[j][j]=gb.YG[j][j]+g/m+g*(1-m)/m/m
+            gb.YB[i][i]=gb.YB[i][i]+b/m+b*(m-1)/m
+            gb.YB[j][j]=gb.YB[j][j]+b/m+b*(1-m)/m/m
+            gb.YG[i][j]=gb.YG[i][j]-g/m
+            gb.YG[j][i]=gb.YG[j][i]-g/m
+            gb.YB[i][j]=gb.YB[i][j]-b/m
+            gb.YB[j][i]=gb.YB[j][i]-b/m
+            # g1=g/gb.sLine[i].K
+            # b1=b/gb.sLine[i].K
+            # g2=g*(gb.sLine[i].K-1)/gb.sLine[i].K
+            # b2=b*(gb.sLine[i].K-1)/gb.sLine[i].K
+            # g3=g*(1-gb.sLine[i].K)/(gb.sLine[i].K*gb.sLine[i].K)
+            # b3=b*(1-gb.sLine[i].K)/(gb.sLine[i].K*gb.sLine[i].K)
+
+            # gb.YG[i][i]=gb.YG[i][i]+g1+g2
+            # gb.YG[j][j]=gb.YG[j][j]+g1+g3
+            # gb.YG[i][j]=gb.YG[i][j]-g1
+            # gb.YG[j][i]=gb.YG[j][i]-g1
+            # gb.YB[i][i]=gb.YB[i][i]+b1+b2
+            # gb.YB[j][j]=gb.YB[j][j]+b1+b3
+            # gb.YB[i][j]=gb.YB[i][j]-b1
+            # gb.YB[j][i]=gb.YB[j][i]-b1
 
     #check Y matrix
     f=open("E:\\coding\\潮流上机\\GGBB.txt","w")
@@ -102,6 +123,6 @@ def get_Y_matrix():
             if(abs(gb.YB[i][j])>0.00001):
                 f.write("Y(%3d,%-3d)=(%10.5f,%10.5f)\n"%(i+1,j+1,gb.YG[i][j],gb.YB[i][j]))
     f.close()
-	
+    
 if __name__=="__main__":
-	pass
+    get_Y_matrix()

@@ -72,15 +72,23 @@ def caculate_yakebi_S():
                 temp.append(0)
             else:
                 temp.append(2*gb.sBus[i].e)
-        gb.H.append(temp.copy())
+        gb.S.append(temp.copy())
 
 def get_yakebi():
     caculate_ab()
+    gb.H.clear()
+    gb.N.clear()
+    gb.J.clear()
+    gb.L.clear()
+    gb.R.clear()
+    gb.S.clear()
+    YAKEBI=[[0]*(2*(gb.nBus-1)) for i in range(2*(gb.nBus-1))]
     caculate_yakebi_H()
     caculate_yakebi_N()
     caculate_yakebi_J()
     caculate_yakebi_L()
-    YAKEBI=[[0]*(2*(gb.nBus-1)) for i in range(2*(gb.nBus-1))]
+    caculate_yakebi_R()
+    caculate_yakebi_S()
     for i in range(gb.num_PQ):
         for j in range(gb.num_PQ):
             YAKEBI[2*i][2*j]=gb.H[i][j]
@@ -90,48 +98,31 @@ def get_yakebi():
 
     for i in range(gb.num_PQ):
         for j in range(gb.num_PV):
-            YAKEBI[2*(gb.num_PQ-1)+2*i][2*j]=gb.H[i][j+gb.num_PQ-1]
-            YAKEBI[2*(gb.num_PQ-1)+2*i][2*j+1]=gb.N[i][j+gb.num_PQ-1]
-            YAKEBI[2*(gb.num_PQ-1)+2*i+1][2*j]=gb.J[i][j+gb.num_PQ-1]
-            YAKEBI[2*(gb.num_PQ-1)+2*i+1][2*j+1]=gb.L[i][j+gb.num_PQ-1]
+            YAKEBI[2*i][2*gb.num_PQ+2*j]=gb.H[i][j+gb.num_PQ]
+            YAKEBI[2*i][2*gb.num_PQ+2*j+1]=gb.N[i][j+gb.num_PQ]
+            YAKEBI[2*i+1][2*gb.num_PQ+2*j]=gb.J[i][j+gb.num_PQ]
+            YAKEBI[2*i+1][2*gb.num_PQ+2*j+1]=gb.L[i][j+gb.num_PQ]
             
     for i in range(gb.num_PV):
         for j in range(gb.num_PQ):
-            YAKEBI[2*i][2*(gb.num_PQ-1)+2*j]=gb.H[i+gb.num_PQ-1][j]
-            YAKEBI[2*i+1][2*(gb.num_PQ-1)+2*j]=gb.N[i+gb.num_PQ-1][j]
-            YAKEBI[2*i][2*(gb.num_PQ-1)-1+2*j+1]=gb.R[i+gb.num_PQ-1][j]
-            YAKEBI[2*i+1][2*(gb.num_PQ-1)-1+2*j+1]=gb.S[i+gb.num_PQ-1][j]        
+            YAKEBI[2*gb.num_PQ+2*i][2*j]=gb.H[i+gb.num_PQ][j]
+            YAKEBI[2*gb.num_PQ+2*i+1][2*j]=gb.N[i+gb.num_PQ][j]
+            YAKEBI[2*gb.num_PQ+2*i][2*j+1]=gb.R[i+gb.num_PQ][j]
+            YAKEBI[2*gb.num_PQ+2*i+1][2*j+1]=gb.S[i+gb.num_PQ][j]        
+    
     for i in range(gb.num_PV):
         for j in range(gb.num_PV):
-            YAKEBI[2*(gb.num_PQ-1)+2*i][2*(gb.num_PQ-1)+2*j]=gb.H[i+gb.num_PQ-1][j+gb.num_PQ-1]
-            YAKEBI[2*(gb.num_PQ-1)+2*i+1][2*(gb.num_PQ-1)+2*j]=gb.N[i+gb.num_PQ-1][j+gb.num_PQ-1]
-            YAKEBI[2*(gb.num_PQ-1)+2*i][2*(gb.num_PQ-1)+2*j+1]=gb.R[i+gb.num_PQ-1][j+gb.num_PQ-1]
-            YAKEBI[2*(gb.num_PQ-1)+2*i+1][2*(gb.num_PQ-1)+2*j+1]=gb.S[i+gb.num_PQ-1][j+gb.num_PQ-1]    
+            YAKEBI[2*gb.num_PQ+2*i][2*gb.num_PQ+2*j]=gb.H[i+gb.num_PQ][j+gb.num_PQ]
+            YAKEBI[2*gb.num_PQ+2*i+1][2*gb.num_PQ+2*j]=gb.N[i+gb.num_PQ][j+gb.num_PQ]
+            YAKEBI[2*gb.num_PQ+2*i][2*gb.num_PQ+2*j+1]=gb.R[i+gb.num_PQ][j+gb.num_PQ]
+            YAKEBI[2*gb.num_PQ+2*i+1][2*gb.num_PQ+2*j+1]=gb.S[i+gb.num_PQ][j+gb.num_PQ]    
     return YAKEBI
 
                 
     
 if __name__=="__main__":
     from getYMatrix import get_Y_matrix
-    from getUnbalance import get_unbalance
+    from getUnbalance import caculate_unbalance
     get_Y_matrix()
-    get_unbalance()
-
-    caculate_ab()
-    caculate_yakebi_H()
-    caculate_yakebi_N()
-    caculate_yakebi_J()
-    caculate_yakebi_L()
-    YAKEBI=get_yakebi()
-    print(np.mat(gb.H))
-    print(np.mat(gb.N))
-    print(np.mat(gb.J))
-    print(np.mat(gb.L))
-    # print(np.mat(YAKEBI))
-
-    for line in YAKEBI:
-        print("[",end='')
-        for ele in line:
-            print("%.3f"%ele,end=',')
-        print("]",end='')
-        print(' ')
+    caculate_unbalance()
+    print(get_yakebi())
